@@ -1,0 +1,3 @@
+displayName = Confessions of Heresy
+author = quasaga, Finisours
+version = 0.1

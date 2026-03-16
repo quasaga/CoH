@@ -1,0 +1,145 @@
+WoodDart: {
+	DisplayName: Wood Dart
+	Tooltip: ""
+}
+
+MalevolentHand: {
+	DisplayName: Malevolent Hand
+	Tooltip:
+		'''
+		Summons malicious shadows to attack enemies
+		They siphon life from foes to restore your health
+		'''
+}
+
+MaskOfSalvation: {
+	DisplayName: Mask Of Salvation
+	Tooltip: Increases life regeneration the lower your health is
+}
+
+Hemoflower: {
+	DisplayName: Hemoflower
+	Tooltip: Mana costs are halved, but casting drains some life
+}
+
+DrainingTear: {
+	DisplayName: Draining Tear
+	Tooltip:
+		'''
+		When out of mana, use health instead of mana.
+		Casting without using mana deals 25% more damage.
+		'''
+}
+
+ThePainDome: {
+	DisplayName: The Pain Dome
+	Tooltip:
+		'''
+		When out of mana, use health instead of mana.
+		Casting without using mana deals 33% more damage.
+		Gradually increasing regen at lower health.
+		Max mana is halved
+		'''
+}
+
+RuddyCloak: {
+	DisplayName: Ruddy Cloak
+	Tooltip:
+		'''
+		Mana costs are halved, but casting drains chunks of life
+		Being drained for lots of health causes blood to rain
+		'''
+}
+
+ScarletCore: {
+	DisplayName: Scarlet Core
+	Tooltip:
+		'''
+		Sacrifice health to make blood moon pass
+		Non-consumable
+		'''
+}
+
+BaseCustomDraw: {
+	DisplayName: Base Custom Draw
+	Tooltip: ""
+}
+
+ClotSpitter: {
+	DisplayName: Clot Spitter
+	Tooltip: Shoots Bludgeoning Darts
+}
+
+CloggedBarrel: {
+	DisplayName: Clogged Barrel
+	Tooltip: Charges up a big splitting shot
+}
+
+CryoSurge: {
+	DisplayName: Cryo Surge
+	Tooltip: ""
+}
+
+BlindingBurst: {
+	DisplayName: Blinding Burst
+	Tooltip: ""
+}
+
+OverloadedSneezer: {
+	DisplayName: Overloaded Sneezer
+	Tooltip:
+		'''
+		Shoots in bursts of 4.
+		"Sneezes" at the end of each burst.
+		'''
+}
+
+Circulation: {
+	DisplayName: Circulation
+	Tooltip: ""
+}
+
+TheLifeline: {
+	DisplayName: The Lifeline
+	Tooltip: Healing orbs shoot out of hit enemies
+}
+
+BloodyDischarge: {
+	DisplayName: Bloody Discharge
+	Tooltip: Charges up to 10 spears.
+}
+
+SicklyHarvest: {
+	DisplayName: Sickly Harvest
+	Tooltip: Allows ramming through enemies.
+}
+
+BloodInitiation: {
+	DisplayName: Blood Initiation
+	Tooltip: Spawns a friendly Blood Cultist to fight for you
+}
+
+VikingFrancisca: {
+	DisplayName: Viking Francisca
+	Tooltip: Sticks into enemies and tiles
+}
+
+OakWorkbench: {
+	DisplayName: Oak Workbench
+	Tooltip: ""
+}
+
+OakWall: {
+	DisplayName: Oak Wall
+	Tooltip: ""
+}
+
+OakWood: {
+	DisplayName: Oak Wood
+	Tooltip: ""
+}
+
+OakPlatform: {
+	DisplayName: Oak Platform
+	Tooltip: ""
+}

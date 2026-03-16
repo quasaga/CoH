@@ -1,0 +1,10 @@
+NPCs: {
+	Morana.DisplayName: Morana
+	FrigidSkull.DisplayName: Frigid Skull
+	OccultSkull.DisplayName: Occult Skull
+	BloodCultist.DisplayName: Blood Cultist
+	BloodSpirit.DisplayName: Blood Spirit
+	BloodHound.DisplayName: Blood Hound
+	BloodCultistA.DisplayName: Blood Cultist
+	BloodSpiritA.DisplayName: Blood Spirit
+}

@@ -1,0 +1,60 @@
+CommonItemTooltip: {
+	PercentIncreased: {
+		Dart: "{0}% increased dart damage"
+		Bullet: "{0}% increased bullet damage"
+		Arrow: "{0}% increased arrow damage"
+		AmmoConserve: "{0}% chance to save ammo"
+		MoveSpeedI: "{0}% increased movement speed"
+		HealthI: "{0}% increased max health"
+	}
+
+	PercentReduced: {
+		MoveSpeedR: "{0}% reduced movement speed"
+		HealthR: "{0}% reduced max health"
+	}
+}
+
+Configs: {
+	markMadeForgeryConfig: {
+		DisplayName: mark Made Forgery Config
+
+		ShowHealthDrainText: {
+			Label: Show Health Drain Combat Text
+			Tooltip: ""
+		}
+	}
+
+	CoHConfig: {
+		DisplayName: Co H Config
+
+		ShowHealthDrainText: {
+			Label: Show Health Drain Combat Text
+			Tooltip: ""
+		}
+	}
+}
+
+NPCs: {
+	FleshAbomination.DisplayName: Flesh Abomination
+	PutridHorror.DisplayName: Putrid Horror
+	ResurrectedHorror.DisplayName: Resurrected Horror
+	Morana.DisplayName: Morana
+	FrigidSkull.DisplayName: Frigid Skull
+	OccultSkull.DisplayName: Occult Skull
+	BloodCultistB.DisplayName: Blood Cultist B
+	BloodCultist.DisplayName: Blood Cultist
+	BloodSpirit.DisplayName: Blood Spirit
+	BloodSpiritB.DisplayName: Blood Spirit B
+	BloodHound.DisplayName: Blood Hound
+	BloodCultistA.DisplayName: Blood Cultist A
+	BloodSpiritA.DisplayName: Blood Spirit A
+}
+
+Biomes: {
+	ValhallaBiome: {
+		TownNPCDialogueName: the Valhalla Biome
+		DisplayName: Valhalla Biome
+	}
+}
+
+Tiles.OakWorkbench.MapEntry: Oak Workbench

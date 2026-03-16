@@ -1,0 +1,19 @@
+Bludgeoning: {
+	DisplayName: Bludgeoning
+	Description: You are bleeding.
+}
+
+HighVoltage: {
+	DisplayName: High Voltage
+	Description: Mods.CoH.Buffs.HighVoltage.Description
+}
+
+BloodCultistBuff: {
+	DisplayName: Blood Cultist Buff
+	Description: The Blood Cultist will fight for you
+}
+
+VikingsPenetration: {
+	DisplayName: Vikings Penetration
+	Description: Mods.CoH.Buffs.VikingsPenetration.Description
+}

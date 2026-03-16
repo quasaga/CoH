@@ -1,0 +1,17 @@
+[h1] Confessions of Heresy Mod [/h1]
+
+Confessions of Heresy aims to make up for holes in the vanilla terraria experience and build upon them, whilst adding its own experience to the mix
+
+Additions include:
+[list]
+[*] Rework of the Blood Moon to be more similar to other events
+[*] 3 New Bosses
+[*] A New Micro-Biome
+[*] Proper Hardmode Cave Exploration
+[*] 50+ Unique Weapons
+[*] 25+ New Accessories
+[*] A Mage Subclass
+[*] Probably some more stuff
+[/list]
+
+The mod is in early development so expect bugs.

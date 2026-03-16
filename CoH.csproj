@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk"> 
+	<!-- Import tModLoader mod properties -->
+	<Import Project="..\tModLoader.targets" />
+
+	<!-- General -->
+	<PropertyGroup>
+		
+	</PropertyGroup>
+
+	<!-- References -->
+	<ItemGroup>
+	
+	</ItemGroup>
+
+	<!-- I LOVE .XNB ON LINUX <3 -->
+	<Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+		<Message Text="Restoring dotnet tools" Importance="High" />
+		<Exec Command="dotnet tool restore" />
+	</Target>
+
+</Project>
