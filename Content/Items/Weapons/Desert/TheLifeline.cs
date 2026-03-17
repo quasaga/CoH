@@ -1,16 +1,6 @@
-using Microsoft.Xna.Framework;
-using System;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Audio;
-using CoH.Common.Players;
-using CoH.Common.Interfaces;
-using Microsoft.Xna.Framework.Graphics;
-using CoH.Content.Projectiles.Ranged;
-using Microsoft.Xna.Framework.Audio;
-using System.Collections.Generic;
 using CoH.Content.Projectiles.Melee;
 
 namespace CoH.Content.Items.Weapons.Desert
@@ -26,11 +16,11 @@ namespace CoH.Content.Items.Weapons.Desert
         {
             Item.width = 24;
             Item.height = 24;
-            Item.damage = 34;
+            Item.damage = 32;
             Item.DamageType = DamageClass.MeleeNoSpeed;
             Item.useTime = Item.useAnimation = 25;
-            Item.knockBack = 3f;
-            Item.crit = 8;
+            Item.knockBack = 2.5f;
+            Item.crit = 12;
             Item.shootSpeed = 16;
 
             Item.shoot = ModContent.ProjectileType<TheLifelineProjectile>();
@@ -39,7 +29,7 @@ namespace CoH.Content.Items.Weapons.Desert
             Item.noUseGraphic = true;
             Item.useStyle = ItemUseStyleID.Shoot;
 
-            Item.value = Item.buyPrice(silver: 777);
+            Item.value = Item.buyPrice(gold: 9);
             Item.rare = ItemRarityID.Lime;
         }
     }
