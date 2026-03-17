@@ -137,7 +137,7 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
                 }
             }
 
-            Main.NewText($"candidate: {candidate} mainExists: {mainExists} index: {projIndex}");
+            //Main.NewText($"candidate: {candidate} mainExists: {mainExists} index: {projIndex}");
 
             if (!mainExists && Projectile.whoAmI == candidate)
             {

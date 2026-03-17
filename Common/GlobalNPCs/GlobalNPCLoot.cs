@@ -12,12 +12,12 @@ namespace CoH.Content.NPCs
             if (npc.type == NPCID.EyeballFlyingFish) // Wandering Eye Fish
             {
                 int itemType = ModContent.ItemType<Items.Accessories.DrainingTear>();
-                npcloot.Add(ItemDropRule.Common(itemType, 8)); // 1 in 8 drop chance
+                npcloot.Add(ItemDropRule.Common(itemType, 7));
             }
             if (npc.type == NPCID.ZombieMerman)
             {
                 int itemType = ModContent.ItemType<Items.Weapons.Bloodmoon.MalevolentHand>();
-                npcloot.Add(ItemDropRule.Common(itemType, 8)); // 1 in 8 drop chance
+                npcloot.Add(ItemDropRule.Common(itemType, 7));
             }
         }
     }
