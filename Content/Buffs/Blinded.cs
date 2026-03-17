@@ -1,57 +1,62 @@
-﻿using Terraria;
+﻿using System;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using XPT.Core.Audio.MP3Sharp.Decoding.Decoders.LayerIII;
 
 namespace CoH.Content.Buffs
 {
-	public class HighVoltage : ModBuff
+	public class Blinded : ModBuff
 	{
 		public override void SetStaticDefaults() {
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true; // Players can give other players buffs, which are listed as pvpBuff
 			Main.buffNoSave[Type] = true; // Causes this buff not to persist when exiting and rejoining the world
+			BuffID.Sets.GrantImmunityWith[Type].Add(BuffID.Confused);
 		}
 
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-			npc.GetGlobalNPC<HighVoltageNPC>().lifeRegenDebuff = true;
+			npc.GetGlobalNPC<BlindedNPC>().slowDebuff = true;
+			float area = npc.width * npc.height;
+			float scale = MathF.Pow(area, 0.2f) / 3f;
 
-			if (Main.rand.NextBool(3)) // controls spawn rate
+			if (Main.rand.NextBool(5)) // controls spawn rate
 			{
 				Dust dust = Dust.NewDustDirect(
 					npc.position,
 					npc.width,
 					npc.height,
-					DustID.Electric
+					DustID.Smoke,
+					-npc.velocity.X * scale,
+					-npc.velocity.Y * scale,
+					0,
+					Color.Tan,
+					scale
 				);
 				
-				dust.velocity *= 0.5f;
+				dust.velocity *= 0.1f;
 			}
 		}
 	}
 
-		internal class HighVoltageNPC : GlobalNPC
+		internal class BlindedNPC : GlobalNPC
 	{
-		public bool lifeRegenDebuff;
+		public bool slowDebuff;
 
 		public override bool InstancePerEntity => true;
 
 		public override void ResetEffects(NPC npc)
 		{
-			lifeRegenDebuff = false;
+			slowDebuff = false;
 		}
 
 		public override void UpdateLifeRegen(NPC npc, ref int damage)
 		{
-			if (lifeRegenDebuff)
+			if (slowDebuff)
 			{
-				if (npc.lifeRegen > 0)
-					npc.lifeRegen = 0;
-
-				if (damage < 3)
-					damage = 3;
-
-				npc.lifeRegen -= 30;
+				npc.velocity *= 0.94f;
 			}
 		}
 	}

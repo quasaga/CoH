@@ -52,7 +52,8 @@ namespace CoH.Content.Projectiles.Magic
         {
             base.OnHitNPC(target, hit, damageDone);
 
-			if (Main.rand.NextBool(7)) target.AddBuff(BuffID.Confused, 120);
+			if (Main.rand.NextBool(10)) target.AddBuff(BuffID.Confused, 180);
+			target.AddBuff(ModContent.BuffType<Blinded>(), 420);
         }
 
 		public override void OnKill(int timeLeft)

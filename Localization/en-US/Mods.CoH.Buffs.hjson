@@ -17,3 +17,8 @@ VikingsPenetration: {
 	DisplayName: Vikings Penetration
 	Description: Mods.CoH.Buffs.VikingsPenetration.Description
 }
+
+Blinded: {
+	DisplayName: Blinded
+	Description: Mods.CoH.Buffs.Blinded.Description
+}
