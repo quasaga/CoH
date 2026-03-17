@@ -9,12 +9,12 @@ namespace CoH.Content.NPCs
     {
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcloot)
         {
-            if (npc.type == NPCID.WanderingEye) // Wandering Eye Fish
+            if (npc.type == NPCID.EyeballFlyingFish) // Wandering Eye Fish
             {
                 int itemType = ModContent.ItemType<Items.Accessories.DrainingTear>();
                 npcloot.Add(ItemDropRule.Common(itemType, 8)); // 1 in 8 drop chance
             }
-            if (npc.type == NPCID.ZombieMerman) // Zombie Merman
+            if (npc.type == NPCID.ZombieMerman)
             {
                 int itemType = ModContent.ItemType<Items.Weapons.Bloodmoon.MalevolentHand>();
                 npcloot.Add(ItemDropRule.Common(itemType, 8)); // 1 in 8 drop chance
