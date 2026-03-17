@@ -52,12 +52,15 @@ namespace CoH.Content.Buffs
 			slowDebuff = false;
 		}
 
-		public override void UpdateLifeRegen(NPC npc, ref int damage)
-		{
+        public override void PostAI(NPC npc)
+        {
+            base.PostAI(npc);
+
 			if (slowDebuff)
 			{
-				npc.velocity *= 0.94f;
+				npc.velocity.X *= 0.94f;
+				npc.velocity.Y *= 0.96f;
 			}
-		}
+        }
 	}
 }
