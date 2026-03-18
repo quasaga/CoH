@@ -1,12 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.DataStructures;
-using CoH.Content.Buffs;
-using CoH.Common.Players;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace CoH.Content.Projectiles.Enemies
 {
@@ -20,7 +15,7 @@ namespace CoH.Content.Projectiles.Enemies
 			Projectile.friendly = false; // Can the projectile deal damage to enemies?
 			Projectile.hostile = false; // Can the projectile deal damage to the player?
 			Projectile.penetrate = 25; // How many monsters the projectile can penetrate.
-			Projectile.timeLeft = 140; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+			Projectile.timeLeft = 141; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
 			Projectile.ignoreWater = false; // Does the projectile's speed be influenced by water?
 			Projectile.tileCollide = false; // Can the projectile collide with tiles?
 			Projectile.extraUpdates = 1; // Set to above 0 if you want the projectile to update multiple time in a frame
@@ -72,9 +67,10 @@ namespace CoH.Content.Projectiles.Enemies
 			// Spawn dust here
 			for (int i = 0; i < 25; i++)
 			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.t_Meteor, Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f), 0, default, 1f);
-				dust.velocity *= 2f;
+				Dust dust = Dust.NewDustDirect(Projectile.Center, Projectile.width, Projectile.height, DustID.Blood, Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f), 0, default, 1f);
+				dust.velocity = -Projectile.velocity / 4;
 				dust.noGravity = true;
+				dust.scale = 1.5f;
 			}
 		}
 	}

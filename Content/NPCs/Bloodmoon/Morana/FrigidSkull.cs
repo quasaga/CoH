@@ -15,7 +15,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			NPC.height = 48;
 			NPC.damage = 50;
 			NPC.defense = 75;
-			NPC.lifeMax = 300;
+			NPC.lifeMax = 450;
 			NPC.aiStyle = -1;
 			NPC.knockBackResist = 0.15f;
 			NPC.noGravity = true;

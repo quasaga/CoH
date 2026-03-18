@@ -4,16 +4,11 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using CoH.Content.Projectiles;
 using CoH.Common.Systems;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Terraria.GameContent.UI.BigProgressBar;
-using Terraria.Graphics;
 using CoH.Content.Projectiles.Bosses;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace CoH.Content.NPCs.Bloodmoon.Morana
 {
@@ -57,8 +52,10 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 		int teleportDelay = 45;
 		int teleportDelayCounter = 0;
 		bool effectsApplied = false;
+		int arenaTimer = 0;
 		Vector2 dir;
 		float velFactor;
+
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
@@ -67,6 +64,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			NPCID.Sets.MPAllowedEnemies[Type] = true;
 			NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
         }
+		
 		public override void SetDefaults()
 		{
 			NPC.width = 96;
@@ -101,6 +99,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			{
 				NPC.netUpdate = true;
 				Filters.Scene.Deactivate("CoH:DarknessCircle");
+				Filters.Scene.Deactivate("CoH:ArenaCircle");
 				for (int i = 0; i < 15; i++)
 				{
 					Dust dust = Dust.NewDustDirect(
@@ -284,18 +283,38 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			}
 		}
 
-		public void DoPhase2()
+        public void DoPhase2()
 		{
 			Player player = Main.player[NPC.target];
 
-			accelSpeed = 1.5f;
-			friction = 0.92f;
+			accelSpeed = 0.5f;
+			friction = 0.94f;
 			NPC.dontTakeDamage = true;
 			SpawnCultists();
 
+			targetPos = GetAveragePlayerPosition(radius: 1200) + new Vector2(0f, -450f);
+
+			Vector2 circlePos = NPC.Center + new Vector2(0, 450);
+			Vector2 dist = player.Center - circlePos;
+			if (dist.Length() > 600f && arenaTimer > 90)
+			{
+				player.statLife -= player.statLifeMax / 100;
+
+				if (player.statLife <= 0)
+				{
+					//player.KillMe(PlayerDeathReason.ByNPC(NPC.type), 1, 0, false);
+				}
+			}
+
+			Filters.Scene["CoH:ArenaCircle"].GetShader().UseTargetPosition(circlePos).
+				UseIntensity(600f).
+				UseImage(AssetLoader.veinTexture).
+				UseProgress(Main.GameUpdateCount).
+				UseColor(new Color(211, 71, 74)).
+				UseOpacity(0.5f);
+
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				targetPos = new Vector2(player.Center.X, player.Center.Y - 450f);
 				BloodCultistAttackManager.UpdateTick();
 				//Main.NewText("boss ready:" + BloodCultistAttackManager.attackTickReady);
 
@@ -327,7 +346,6 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 					{
 						bossPhase = 2;
 						NPC.netUpdate = true;
-						Filters.Scene.Deactivate("CoH:ArenaCircle");
 					}
 				}
 			}
@@ -339,12 +357,13 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			if (!effectsApplied && Main.netMode != NetmodeID.Server)
 			{
+				Filters.Scene.Deactivate("CoH:ArenaCircle");
 				Filters.Scene.Activate("CoH:DarknessCircle");
 				effectsApplied = true;
 			}
 			else if (Main.netMode != NetmodeID.Server)
 			{
-				Filters.Scene["CoH:DarknessCircle"].GetShader().UseTargetPosition(player.Center).UseIntensity(560f);
+				Filters.Scene["CoH:DarknessCircle"].GetShader().UseTargetPosition(player.Center).UseIntensity(600f).UseProgress(Main.GameUpdateCount);
 			}
 
 			accelSpeed = 0.33f;
@@ -378,10 +397,12 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			int occultSkull = ModContent.NPCType<OccultSkull>();
 			int frigidSkull = ModContent.NPCType<FrigidSkull>();
 			float radius = 150f;
+			Vector2 dir = NPC.Center - targetPos;
+			dir.Normalize();
 			for (int i = 0; i < 3; i++)
 			{
 				float angle = MathHelper.TwoPi * i / 6f;
-				Vector2 offset = angle.ToRotationVector2() * radius;
+				Vector2 offset = angle.ToRotationVector2() * radius * dir;
 				Vector2 spawnPos = NPC.Center - offset;
 
 				NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawnPos.X, (int)spawnPos.Y, occultSkull);
@@ -395,9 +416,9 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawnPos.X, (int)spawnPos.Y, frigidSkull);
 			}
 			SoundEngine.PlaySound(SoundID.DD2_BetsyWindAttack, NPC.Center);
-			Vector2 dir = (targetPos - NPC.Center) * -1;
-			dir.Normalize();
-			NPC.velocity = dir * moveSpeed * 0.2f;
+			Vector2 recoilDir = (targetPos - NPC.Center) * -1;
+			recoilDir.Normalize();
+			NPC.velocity = recoilDir * moveSpeed * 0.2f;
 		}
 
 		public void SpearAtk(Vector2 targetPos)
@@ -417,7 +438,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				Vector2 spawnPos = targetPos + offset;
 				Vector2 dir = targetPos - spawnPos;
 				dir.Normalize();
-				Vector2 vel = dir * 22f;
+				Vector2 vel = dir * 18f;
 
 				Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, vel, frostSpear, damage, knockBack);
 			}
@@ -432,8 +453,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			if (Main.netMode != NetmodeID.Server)
 			{
-				Player player = Main.player[NPC.target];
-				Filters.Scene["CoH:ArenaCircle"].GetShader().UseTargetPosition(player.Center).UseIntensity(720f).UseProgress(Main.GameUpdateCount * 0.016f).UseImage(AssetLoader.voronoiTexture);
+				Filters.Scene.Activate("CoH:ArenaCircle");
 			}
 
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
@@ -445,6 +465,30 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, bloodCultist);
 			}
 			cultistSpawned = true;
+		}
+
+		Vector2 GetAveragePlayerPosition(float radius)
+		{
+			Vector2 sum = Vector2.Zero;
+			int count = 0;
+
+			foreach (Player player in Main.player)
+			{
+				if (player.active && !player.dead)
+				{
+					float distance = Vector2.Distance(NPC.Center, player.Center);
+					if (distance <= radius)
+					{
+						sum += player.Center;
+						count++;
+					}
+				}
+			}
+
+			if (count == 0)
+				return NPC.Center; // fallback if no players in range
+
+			return sum / count; // average position
 		}
 
 		public void Teleport()

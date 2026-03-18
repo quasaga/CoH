@@ -20,14 +20,22 @@ float uSaturation;
 float4 uSourceRect; // Doesn't seem to be used, but included for parity.
 float2 uZoom;
 
-float4 ApplyArenaTexture(float4 color, float factor)
+float4 ApplyArenaTexture(float4 color, float2 coords, float dist, float factor)
 {
-    float2 uv = color.xy / uScreenResolution;
-    float2 texOffset = float2(uTime * 0.1, uTime * 0.1);
+    // UV for moving Voronoi texture
+    float2 uv = coords;
+    float2 texOffset = float2(uTime, uTime);
     uv = frac(uv + texOffset);
 
-    float4 overlay = tex2D(uImage1, uv);
-    float3 result = lerp(color.rgb, overlay.rgb, factor * uOpacity);
+    float overlayValue = tex2D(uImage1, uv).r; // grayscale texture
+    float3 coloredOverlay = uColor * overlayValue;
+
+    float rimWidth = 100;
+    float rim = saturate(1.0 - (dist - uIntensity) / rimWidth); 
+
+    coloredOverlay *= (1.0 - rim); // Darken overlay near rim
+
+    float3 result = lerp(color.rgb, coloredOverlay, factor * uOpacity);
 
     return float4(result, color.a);
 }
@@ -38,10 +46,10 @@ float4 FilterArenaCircle(float2 coords : TEXCOORD0) : COLOR0
     float2 pTarget = uTargetPosition - uScreenPosition;
     float dist = distance(pCoords, pTarget);
 
-    float outsideFactor = step(uIntensity, dist); // 1 if outside, 0 inside
-    float4 originalColor = tex2D(uImage0, coords);
+    float factor = step(uIntensity, dist); // 1 if outside, 0 inside
+    float4 color = tex2D(uImage0, coords);
 
-    float4 processedColor = ApplyArenaTexture(originalColor, outsideFactor);
+    float4 processedColor = ApplyArenaTexture(color, coords, dist, factor);
 
     return processedColor;
 }

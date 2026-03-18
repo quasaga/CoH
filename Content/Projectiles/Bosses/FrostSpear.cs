@@ -10,10 +10,8 @@ namespace CoH.Content.Projectiles.Bosses
 	public class FrostSpear : ModProjectile
 	{
 		float projSpeed = 3f;
-		int aimTime = 75;
+		int aimTime = 80;
 		int aimTimeCounter = 0;
-		int lockTime = 25;
-		int lockTimeCounter = 0;
 		int state = 0;
 		Vector2 storedDirection;
 		public override void SetStaticDefaults()
@@ -65,7 +63,7 @@ namespace CoH.Content.Projectiles.Bosses
 					if (remainingTicks > 0)
 					{
 						Projectile.velocity -= Vector2.Normalize(Projectile.velocity) * (Projectile.velocity.Length() / remainingTicks);
-						Projectile.alpha -= Projectile.alpha / (int)remainingTicks * 3; // fade in a bit faster
+						Projectile.alpha -= Projectile.alpha / (int)remainingTicks * 2; // fade in a bit faster
 					}
 				}
 			}
@@ -74,16 +72,10 @@ namespace CoH.Content.Projectiles.Bosses
 				Projectile.velocity = Vector2.Zero;
 				Projectile.hostile = true;
 
-				Projectile.rotation = storedDirection.ToRotation() + MathHelper.ToRadians(90f);
-
-				lockTimeCounter++;
-				if (lockTimeCounter >= lockTime)
-				{
-					storedDirection.Normalize();
-					Projectile.velocity = storedDirection * projSpeed * -7;
-					state = 2;
-					Projectile.netUpdate = true;
-				}
+				storedDirection.Normalize();
+				Projectile.velocity = storedDirection * projSpeed * -7;
+				state = 2;
+				Projectile.netUpdate = true;
 			}
 			else if (state == 2)
 			{

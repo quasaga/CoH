@@ -26,10 +26,11 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			NPC.friendly = true;
 			NPC.HitSound = SoundID.Item171;
 			NPC.DeathSound = SoundID.NPCDeath6;
+			NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
 		}
 
-		float accelSpeed = 1.5f;
-		float friction = 0.92f;
+		float accelSpeed = 0.5f;
+		float friction = 0.94f;
 		bool projOffsetNext = false;
 		Vector2 targetPos;
 		int slot = -1;
@@ -213,12 +214,12 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 						spawnPos,
 						NPC.width,
 						NPC.height,
-						DustID.Ice_Red
+						DustID.Blood
 					);
 
-					dust.velocity = Main.rand.NextVector2Circular(2f, 2f);
-					dust.noGravity = false;
-					dust.scale = 1.2f;
+					dust.velocity *= 1.25f;
+					dust.noGravity = true;
+					dust.scale = 1.5f;
 				}
 			}
 		}
