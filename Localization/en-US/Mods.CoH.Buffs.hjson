@@ -22,3 +22,8 @@ Blinded: {
 	DisplayName: Blinded
 	Description: Mods.CoH.Buffs.Blinded.Description
 }
+
+RuggedCarpetDebuff: {
+	Description: Mods.CoH.Buffs.RuggedCarpetDebuff.Description
+	DisplayName: Rugged Carpet Debuff
+}

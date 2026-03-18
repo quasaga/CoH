@@ -143,3 +143,8 @@ OakPlatform: {
 	DisplayName: Oak Platform
 	Tooltip: ""
 }
+
+RuggedCarpet: {
+	Tooltip: ""
+	DisplayName: Rugged Carpet
+}
