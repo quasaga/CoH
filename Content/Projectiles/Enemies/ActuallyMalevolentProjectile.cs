@@ -30,7 +30,8 @@ namespace CoH.Content.Projectiles.Enemies
 		float projSpeed = 1f;
 
 		public override void AI() {
-			Player player = Main.player[Projectile.owner];
+			int playerIndex = (int)Projectile.ai[0];
+			Player player = playerIndex >= 0 && playerIndex < Main.maxPlayers ? Main.player[playerIndex] : null;
 
 			if (setDir)
 			{

@@ -1,7 +1,5 @@
 ﻿using System;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,7 +14,7 @@ namespace CoH.Content.NPCs.Bloodmoon
 			NPC.height = 48;
 			NPC.damage = 50;
 			NPC.defense = 35;
-			NPC.lifeMax = 400;
+			NPC.lifeMax = 600;
 			NPC.aiStyle = -1;
 			NPC.knockBackResist = 0.15f;
 			NPC.noGravity = false;
@@ -76,7 +74,7 @@ namespace CoH.Content.NPCs.Bloodmoon
 			if (tileBelow.HasTile && Main.tileSolidTop[tileBelow.TileType] && NPC.collideY && player.Center.Y - 4 > NPC.Center.Y && Math.Abs(player.Center.X - NPC.Center.X) <= 12f * 16)
 			{
 				isDropping = true;
-				NPC.position.Y += .1f;
+				NPC.position.Y += 0.1f;
 			}
 			else isDropping = false;
 

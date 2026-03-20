@@ -20,8 +20,7 @@ namespace CoH.Content.Projectiles.Summon
 		public override void SetDefaults() {
 			Projectile.DefaultToWhip();
 
-			Projectile.WhipSettings.Segments = 35;
-			//Projectile.WhipSettings.RangeMultiplier = 3f;
+			Projectile.WhipSettings.Segments = 50;
 		}
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) {

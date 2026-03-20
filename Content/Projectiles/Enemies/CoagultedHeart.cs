@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -24,7 +25,7 @@ namespace CoH.Content.Projectiles.Enemies
 			Projectile.hostile = true; // Can the projectile deal damage to the player?
 			Projectile.timeLeft = 200; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
 			Projectile.penetrate = 100;
-			Projectile.light = 0.2f; // How much light emit around the projectile
+			Projectile.light = 0.5f; // How much light emit around the projectile
 			Projectile.ignoreWater = false; // Does the projectile's speed be influenced by water?
 			Projectile.tileCollide = false; // Can the projectile collide with tiles?
 			Projectile.extraUpdates = 1; // Set to above 0 if you want the projectile to update multiple time in a frame
@@ -33,7 +34,7 @@ namespace CoH.Content.Projectiles.Enemies
 		public override void AI() {
 			Projectile.velocity *= .99f;
 
-			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(90f);
+			Projectile.rotation += Math.Max((Projectile.velocity.Length() - 0.4f) / 10, 0.05f);
 
 			if (Main.rand.NextBool(4))
 			{

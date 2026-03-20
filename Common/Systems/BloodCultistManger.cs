@@ -9,7 +9,7 @@ namespace CoH.Common.Systems
         public static int[] assignedAttack = new int[2]; // 0=SpawnSpirit, 1=MalevolentProj, 2=CoagShot
         public static bool attackTickReady = false;
         public static int attackCooldown = 3 * 60;
-        public static int attackCooldownCounter = 150;
+        public static int attackCooldownCounter = 0;
 
         public static void UpdateTick()
         {

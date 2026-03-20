@@ -18,7 +18,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			NPC.height = 32;
 			NPC.damage = 50;
 			NPC.defense = 35;
-			NPC.lifeMax = 7500;
+			NPC.lifeMax = 9000;
 			NPC.aiStyle = -1;
 			NPC.knockBackResist = 0f;
 			NPC.noGravity = true;
@@ -29,7 +29,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
 		}
 
-		float accelSpeed = 0.5f;
+		float accelSpeed = 0.35f;
 		float friction = 0.94f;
 		bool projOffsetNext = false;
 		Vector2 targetPos;
@@ -54,7 +54,6 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			}
 
 			colTimerCounter++;
-
 			if (colTimerCounter >= colTimer)
 			{
 				NPC.friendly = false;
@@ -69,7 +68,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			for (int i = 0; i < 2; i++)
 			{
-				if (BloodCultistAttackManager.attackTickReady && BloodCultistAttackManager.attackers[i] == who)
+				if (BloodCultistAttackManager.attackTickReady && BloodCultistAttackManager.attackers[i] == who && Main.netMode != NetmodeID.MultiplayerClient)
 				{
 					int attack = BloodCultistAttackManager.assignedAttack[i];
 					switch (attack)
@@ -83,11 +82,13 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				if (BloodCultistAttackManager.attackers[i] == NPC.whoAmI)
 				{
 					slot = i;
+					NPC.netUpdate = true;
 					break;
 				}
 				else
 				{
 					slot = -1;
+					NPC.netUpdate = true;
 				}
 			}
 
@@ -148,7 +149,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				Vector2 offset = angle.ToRotationVector2() * radius;
 				Vector2 spawnPos = player.Center + offset;
 
-				Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, Vector2.Zero, malevolentProjectile, damage, knockBack);
+				Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, Vector2.Zero, malevolentProjectile, damage, knockBack, Owner: -1, NPC.target);
 				SpawnParticle(spawnPos);
 			}
 		}

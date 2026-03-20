@@ -1,3 +1,4 @@
+using CoH.Content.NPCs.Bloodmoon.Morana;
 using FullSerializer;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -10,9 +11,10 @@ namespace CoH.Content.Projectiles.Bosses
 	public class FrostSpear : ModProjectile
 	{
 		float projSpeed = 3f;
-		int aimTime = 80;
+		int aimTime = 70;
 		int aimTimeCounter = 0;
 		int state = 0;
+		bool initiliazed = false;
 		Vector2 storedDirection;
 		public override void SetStaticDefaults()
 		{
@@ -22,21 +24,25 @@ namespace CoH.Content.Projectiles.Bosses
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 12;
-			Projectile.height = 12;
+			Projectile.width = 16;
+			Projectile.height = 16;
 			Projectile.aiStyle = 0;
 			Projectile.friendly = false; // Can the projectile deal damage to enemies?
 			Projectile.hostile = false; // Can the projectile deal damage to the player?
 			Projectile.penetrate = 100;
 			Projectile.timeLeft = 210;
-			Projectile.light = 0f;
+			Projectile.light = 1f;
 			Projectile.ignoreWater = false; // Does the projectile's speed be influenced by water?
 			Projectile.tileCollide = false;
 			Projectile.alpha = 255;
 		}
 
 		public override void AI() {
-			Player player = Main.player[Projectile.owner];
+			int playerIndex = (int)Projectile.ai[0];
+			Player player = playerIndex >= 0 && playerIndex < Main.maxPlayers ? Main.player[playerIndex] : null;
+
+			int ownerID = (int)Projectile.ai[1];
+			int ownerIndex = (int)Projectile.ai[2];
 
 			if (state == 0)
 			{
@@ -49,7 +55,6 @@ namespace CoH.Content.Projectiles.Bosses
 				Projectile.rotation = aimDir.ToRotation() + MathHelper.ToRadians(90f);
 
 				aimTimeCounter++;
-
 				if (aimTimeCounter >= aimTime)
 				{
 					storedDirection = aimDir;
@@ -66,6 +71,15 @@ namespace CoH.Content.Projectiles.Bosses
 						Projectile.alpha -= Projectile.alpha / (int)remainingTicks * 2; // fade in a bit faster
 					}
 				}
+
+				if (ownerID == (float)ModContent.NPCType<Morana>())
+				{
+					NPC owner = Main.npc[ownerIndex];
+					Projectile.velocity = owner.velocity;
+					if (initiliazed) return;
+					initiliazed = true;
+					aimTime += 30;
+				}
 			}
 			else if (state == 1)
 			{
@@ -74,6 +88,7 @@ namespace CoH.Content.Projectiles.Bosses
 
 				storedDirection.Normalize();
 				Projectile.velocity = storedDirection * projSpeed * -7;
+				
 				state = 2;
 				Projectile.netUpdate = true;
 			}
@@ -82,16 +97,6 @@ namespace CoH.Content.Projectiles.Bosses
 				Projectile.velocity += storedDirection * projSpeed;
 
 				Projectile.rotation = storedDirection.ToRotation() + MathHelper.ToRadians(90f);
-			}
-		}
-
-		public override void OnKill(int timeLeft)
-		{
-			SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
-			for (int i = 0; i < 9; i++)
-			{
-				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Clentaminator_Cyan);
-				dust.noGravity = true;
 			}
 		}
 	}

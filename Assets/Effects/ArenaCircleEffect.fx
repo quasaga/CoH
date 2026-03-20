@@ -23,17 +23,18 @@ float2 uZoom;
 float4 ApplyArenaTexture(float4 color, float2 coords, float dist, float factor)
 {
     // UV for moving Voronoi texture
-    float2 uv = coords;
-    float2 texOffset = float2(uTime, uTime);
+    float2 uv = coords * 1.5;
+    float2 texOffset = float2(uProgress, uProgress);
     uv = frac(uv + texOffset);
 
     float overlayValue = tex2D(uImage1, uv).r; // grayscale texture
     float3 coloredOverlay = uColor * overlayValue;
 
-    float rimWidth = 100;
+    float rimWidth = 80;
+    float3 rimColor = uSecondaryColor;
     float rim = saturate(1.0 - (dist - uIntensity) / rimWidth); 
 
-    coloredOverlay *= (1.0 - rim); // Darken overlay near rim
+    coloredOverlay = lerp(coloredOverlay, rimColor, rim); // add rim color to overlay
 
     float3 result = lerp(color.rgb, coloredOverlay, factor * uOpacity);
 

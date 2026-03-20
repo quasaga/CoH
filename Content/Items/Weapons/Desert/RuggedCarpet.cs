@@ -12,7 +12,7 @@ namespace CoH.Content.Items.Weapons.Desert
     {
         int dmg = 140;
         float kb = 3f;
-        float shootspd = 6;
+        float shootspd = 5.5f;
         int useTime = 45;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(RuggedCarpetDebuff.TagDamage);
 

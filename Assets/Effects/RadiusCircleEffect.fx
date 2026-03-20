@@ -20,25 +20,27 @@ float uSaturation;
 float4 uSourceRect; // Doesn't seem to be used, but included for parity.
 float2 uZoom;
 
-float4 FilterDarkness(float2 coords : TEXCOORD0) : COLOR0
+float4 FilterRadiusCircle(float2 coords : TEXCOORD0) : COLOR0
 {
-    float4 color = tex2D(uImage0, coords);
     float2 pCoords = coords * uScreenResolution;
     float2 pTarget = uTargetPosition - uScreenPosition;
-    float radius = uIntensity * uProgress;
     float dist = distance(pCoords, pTarget);
-    float factor = saturate(dist / radius);
-    clamp(factor, 0.1, 1);
+    float factor = step(uIntensity, dist); // 1 if outside, 0 inside
+    float4 color = tex2D(uImage0, coords);
 
-    color *= 1 - factor;
+    float rimWidth = uIntensity / 10;
+    float rim = 1.0 - smoothstep(uIntensity - rimWidth / 2, uIntensity + rimWidth, dist);
+    rim *= factor;
+
+    color.rgb += uColor * rim;
 
     return color;
 }
 
-technique DarknessCircle
+technique RadiusCircle
 {
-    pass DarknessCirclePass
+    pass RadiusCirclePass
     {
-        PixelShader = compile ps_2_0 FilterDarkness();
+        PixelShader = compile ps_2_0 FilterRadiusCircle();
     }
 }

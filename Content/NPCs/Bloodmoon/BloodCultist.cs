@@ -102,7 +102,7 @@ namespace CoH.Content.NPCs.Bloodmoon
 		{
 			Player player = Main.player[NPC.target];
 
-			for (int attempt = 0; attempt < 25; attempt++)
+			for (int attempt = 0; attempt < 100; attempt++)
 			{
 				int randX = Main.rand.Next(minDist, teleportRadius);
 				if (Main.rand.Next(2) == 0) randX *= -1;
