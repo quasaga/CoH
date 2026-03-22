@@ -33,7 +33,7 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
             Item.useAnimation = 35;
             Item.knockBack = 3f;
             Item.crit = 8;
-            Item.shootSpeed = 16;
+            Item.shootSpeed = 1;
 
             Item.shoot = ProjectileID.PurificationPowder;
             Item.channel = true;
@@ -43,11 +43,6 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
 
             Item.value = Item.buyPrice(silver: 777);
             Item.rare = ItemRarityID.Lime;
-        }
-
-        public override bool CanUseItem(Player player)
-        {
-            return base.CanUseItem(player);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

@@ -14,6 +14,12 @@ using MonoMod.Utils;
 using System.Security.AccessControl;
 using Terraria.UI;
 using Terraria.ModLoader.IO;
+using Terraria.GameContent.ItemDropRules;
+using CoH.Content.Items.Weapons.Bloodmoon;
+using CoH.Content.Items.Consumables;
+using ReLogic.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.Graphics.Shaders;
 
 namespace CoH.Content.NPCs.Bloodmoon.Morana
 {
@@ -62,6 +68,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 		float progress = 0f;
 		float darkProgress = 5f;
 		int dmg = 0;
+		public static Asset<Texture2D> veinTexture;
 
         public override void SetStaticDefaults()
         {
@@ -147,6 +154,41 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			return true;
 		}
 
+		public override void ModifyNPCLoot(NPCLoot npcLoot) {
+			// Do NOT misuse the ModifyNPCLoot and OnKill hooks: the former is only used for registering drops, the latter for everything else
+
+			// The order in which you add loot will appear as such in the Bestiary. To mirror vanilla boss order:
+			// 1. Trophy
+			// 2. Classic Mode ("not expert")
+			// 3. Expert Mode (usually just the treasure bag)
+			// 4. Master Mode (relic first, pet last, everything else in between)
+
+			//npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Placeable.Furniture.MinionBossTrophy>(), 10));
+
+			// All the Classic Mode drops here are based on "not expert", meaning we use .OnSuccess() to add them into the rule, which then gets added
+			LeadingConditionRule notExpertRule = new LeadingConditionRule(new Conditions.NotExpert());
+
+			//notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<MinionBossMask>(), 7));
+
+			int[] weapons = new int[]
+			{
+				ModContent.ItemType<SicklyHarvest>(),
+				ModContent.ItemType<BloodInitiation>(),
+				ModContent.ItemType<Circulation>(),
+				ModContent.ItemType<CloggedBarrel>(),
+				ModContent.ItemType<BloodyDischarge>(),
+			};
+
+			notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1, weapons));
+
+			npcLoot.Add(notExpertRule);
+
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<MoranaBossBag>()));
+
+			//npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.MinionBossRelic>()));
+			//npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<MinionBossPetItem>(), 4));
+		}
+
 		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
 		{
 			//EoL scaling
@@ -162,8 +204,18 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
         public override void OnSpawn(IEntitySource source)
         {
-			dmg = NPC.damage;
             base.OnSpawn(source);
+
+			dmg = NPC.damage;
+
+			veinTexture = Mod.Assets.Request<Texture2D>("Assets/Textures/Vein");
+
+			Asset<Effect> arenaShader = Mod.Assets.Request<Effect>("Assets/Effects/ArenaCircleEffect");
+                Filters.Scene["CoH:ArenaCircle"] = new Filter(new ScreenShaderData(arenaShader, "ArenaCirclePass"), EffectPriority.High);
+
+			Asset<Effect> darknessShader = Mod.Assets.Request<Effect>("Assets/Effects/DarknessCircleEffect");
+                Filters.Scene["CoH:DarknessCircle"] = new Filter(new ScreenShaderData(darknessShader, "DarknessCirclePass"), EffectPriority.High);
+
         }
 
 		public override void AI()
@@ -306,7 +358,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 		{
 			Player player = Main.player[NPC.target];
 
-			accelSpeed = 0.3f;
+			accelSpeed = 0.2f;
 			friction = 0.94f;
 			NPC.dontTakeDamage = true;
 			SpawnCultists();
@@ -336,16 +388,17 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			Filters.Scene["CoH:ArenaCircle"].GetShader().UseTargetPosition(circlePos).
 				UseIntensity(560f).
-				UseImage(AssetLoader.veinTexture).
+				UseImage(veinTexture).
 				UseProgress(progress).
 				UseColor(new Color(240, 15, 15)).
 				UseSecondaryColor(0f, 0f, 0f).
 				UseOpacity(0.8f);
 
-				Filters.Scene["CoH:DarknessCircle"].GetShader().UseTargetPosition(circlePos).
+			Filters.Scene["CoH:DarknessCircle"].GetShader().UseTargetPosition(circlePos).
 				UseIntensity(1400f).
-				UseProgress(darkProgress).
-				UseOpacity(0.67f);
+				UseDirection(new Vector2(560f, 0f)).
+				UseColor(0f, 0f, 0f).
+				UseProgress(darkProgress);
 
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{

@@ -17,7 +17,7 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
         {
             Item.width = 30;
             Item.height = 26;
-            Item.damage = 95;
+            Item.damage = 75;
             Item.knockBack = 0.1f;
             Item.mana = 10;
             Item.DamageType = DamageClass.Summon;
@@ -73,7 +73,7 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
     {
         
         int startAttackRange = 700;
-        int attackTimer = 30;
+        int attackTimer = 45;
         int attackCooldown = 30;
         int spiritCharge = 0;
         int projIndex = -1;
@@ -173,7 +173,7 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
             if (dir.Length() > 4096f) Projectile.Center = targetPos;
             else
             {
-                Projectile.velocity = dir / 16;
+                Projectile.velocity = dir / 24;
             }
 
             Projectile.rotation = Projectile.velocity.X * 0.08f;
@@ -228,7 +228,7 @@ namespace CoH.Content.Items.Weapons.Bloodmoon
 
             Vector2 vel = target.Center - Projectile.Center;
             vel.Normalize();
-            Projectile.velocity = vel * -4f;
+            Projectile.velocity = vel * -8f;
             Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, vel * 8f, ModContent.ProjectileType<CultistSpirit>(), Projectile.damage * (level / 2), Projectile.knockBack, player.whoAmI);
         }
     }

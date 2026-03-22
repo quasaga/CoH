@@ -10,9 +10,9 @@ namespace CoH.Content.Items.Weapons.Desert
 {
     public class RuggedCarpet : ModItem
     {
-        int dmg = 140;
+        int dmg = 120;
         float kb = 3f;
-        float shootspd = 5.5f;
+        float shootspd = 6f;
         int useTime = 45;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(RuggedCarpetDebuff.TagDamage);
 

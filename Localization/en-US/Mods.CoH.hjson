@@ -31,6 +31,16 @@ Configs: {
 			Label: Show Health Drain Combat Text
 			Tooltip: ""
 		}
+
+		GenerateValhallaMicroBiome: {
+			Label: Generate Valhalla Micro Biome
+			Tooltip: ""
+		}
+
+		GenerateDesertCivilisation: {
+			Label: Generate Desert Civilisation
+			Tooltip: ""
+		}
 	}
 }
 

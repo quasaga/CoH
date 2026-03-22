@@ -84,11 +84,7 @@ namespace CoH.Common.Players
             if (Player.statLife > healthCost)
             {
                 Player.statLife -= healthCost;
-
-                if (ModContent.GetInstance<CoHConfig>().ShowHealthDrainText)
-                {
-                    CombatText.NewText(Player.Hitbox, Microsoft.Xna.Framework.Color.Red, healthCost);
-                }
+                CombatText.NewText(Player.Hitbox, Microsoft.Xna.Framework.Color.Red, healthCost);
             }
         }
 

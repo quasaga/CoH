@@ -9,6 +9,10 @@ namespace CoH
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [DefaultValue(true)]
-        public bool ShowHealthDrainText { get; set; }
+        public bool GenerateValhallaMicroBiome { get; set; }
+        [DefaultValue(true)]
+        public bool GenerateDesertCivilisation { get; set; }
+
+        
     }
 }

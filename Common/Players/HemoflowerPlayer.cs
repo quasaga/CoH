@@ -51,10 +51,7 @@ namespace CoH.Common.Players
             if (Player.statLife > lifeToDrain && !drainingTearPlayer.isHealthCasting)
             {
                 Player.statLife -= lifeToDrain;
-                if (ModContent.GetInstance<CoHConfig>().ShowHealthDrainText)
-                {
-                    CombatText.NewText(Player.Hitbox, Color.Red, lifeToDrain);
-                }
+                CombatText.NewText(Player.Hitbox, Color.Red, lifeToDrain);
             }
 
             if (!hasRuddyCloak || item.DamageType != DamageClass.Magic) return;

@@ -148,3 +148,8 @@ RuggedCarpet: {
 	Tooltip: ""
 	DisplayName: Rugged Carpet
 }
+
+MoranaBossBag: {
+	DisplayName: Morana Boss Bag
+	Tooltip: ""
+}

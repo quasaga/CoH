@@ -26,11 +26,11 @@ float4 FilterDarkness(float2 coords : TEXCOORD0) : COLOR0
     float2 pCoords = coords * uScreenResolution;
     float2 pTarget = uTargetPosition - uScreenPosition;
     float radius = uIntensity * uProgress;
+    float innerRadius = uDirection.x;
     float dist = distance(pCoords, pTarget);
-    float factor = saturate(dist / radius);
-    clamp(factor, 0.1, 1);
+    float factor = saturate((dist - innerRadius) / (radius - innerRadius));
 
-    color *= 1 - factor;
+    color.rgb = lerp(color.rgb, uColor, factor * uOpacity);
 
     return color;
 }

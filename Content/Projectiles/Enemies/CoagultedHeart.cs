@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
@@ -10,20 +11,15 @@ namespace CoH.Content.Projectiles.Enemies
 {
 	public class CoagultedHeart : ModProjectile
 	{
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5; // The length of old position to be recorded
-			ProjectileID.Sets.TrailingMode[Projectile.type] = 0; // The recording mode
-		}
-
+		int timer = 0;
 		public override void SetDefaults()
 		{
 			Projectile.width = 24; // The width of projectile hitbox
 			Projectile.height = 24; // The height of projectile hitbox
 			Projectile.aiStyle = 0; // The ai style of the projectile, please reference the source code of Terraria
 			Projectile.friendly = false; // Can the projectile deal damage to enemies?
-			Projectile.hostile = true; // Can the projectile deal damage to the player?
-			Projectile.timeLeft = 200; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+			Projectile.hostile = false; // Can the projectile deal damage to the player?
+			Projectile.timeLeft = 210; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
 			Projectile.penetrate = 100;
 			Projectile.light = 0.5f; // How much light emit around the projectile
 			Projectile.ignoreWater = false; // Does the projectile's speed be influenced by water?
@@ -32,6 +28,11 @@ namespace CoH.Content.Projectiles.Enemies
 		}
 
 		public override void AI() {
+			timer++;
+			if (timer >= 30)
+			{
+				Projectile.hostile = true;
+			}
 			Projectile.velocity *= .99f;
 
 			Projectile.rotation += Math.Max((Projectile.velocity.Length() - 0.4f) / 10, 0.05f);
