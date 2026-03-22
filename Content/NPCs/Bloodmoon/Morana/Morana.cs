@@ -67,6 +67,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 		float velFactor;
 		float progress = 0f;
 		float darkProgress = 5f;
+		float arenaRadius = 560f;
 		int dmg = 0;
 		public static Asset<Texture2D> veinTexture;
 
@@ -369,7 +370,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			Vector2 dist = circlePos - player.Center;
 
 			arenaTimer++;
-			if (dist.Length() > 560f)
+			if (dist.Length() > arenaRadius)
 			{
 				player.velocity += dist / 2048;
 				if (arenaTimer > 180)
@@ -387,7 +388,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			progress += 0.04f;
 
 			Filters.Scene["CoH:ArenaCircle"].GetShader().UseTargetPosition(circlePos).
-				UseIntensity(560f).
+				UseIntensity(arenaRadius).
 				UseImage(veinTexture).
 				UseProgress(progress).
 				UseColor(new Color(240, 15, 15)).
@@ -396,7 +397,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			Filters.Scene["CoH:DarknessCircle"].GetShader().UseTargetPosition(circlePos).
 				UseIntensity(1400f).
-				UseDirection(new Vector2(560f, 0f)).
+				UseDirection(new Vector2(arenaRadius, 0f)).
 				UseColor(0f, 0f, 0f).
 				UseProgress(darkProgress);
 
@@ -474,7 +475,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			}
 
 			Vector2 dir = targetPos - NPC.Center;
-			if (dir.Length() <= 96f)
+			if (dir.Length() <= NPC.width * 0.8f)
 			{
 				player.statLife -= dmg;
 				if (player.statLife <= 0)
