@@ -29,11 +29,10 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			NPCID.Sets.SpecificDebuffImmunity[Type][BuffID.Confused] = true;
 		}
 
-		float accelSpeed = 0.35f;
+		float accelSpeed = 0.5f;
 		float friction = 0.94f;
 		bool projOffsetNext = false;
 		Vector2 targetPos;
-		int slot = -1;
 		float offset = 450f;
 		int colTimer = 180;
 		int colTimerCounter = 0;
@@ -64,13 +63,31 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			else
 				NPC.spriteDirection = 1;
 
-			int who = NPC.whoAmI;
+			int slot = (int)NPC.ai[0];
 
-			for (int i = 0; i < 2; i++)
+			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				if (BloodCultistAttackManager.attackTickReady && BloodCultistAttackManager.attackers[i] == who && Main.netMode != NetmodeID.MultiplayerClient)
+				int newSlot = -1;
+
+				for (int i = 0; i < 2; i++)
 				{
-					int attack = BloodCultistAttackManager.assignedAttack[i];
+					if (BloodCultistAttackManager.attackers[i] == NPC.whoAmI)
+					{
+						newSlot = i;
+						break;
+					}
+				}
+
+				if (NPC.ai[0] != newSlot)
+				{
+					NPC.ai[0] = newSlot;
+					NPC.netUpdate = true;
+				}
+
+				if (slot != -1 && BloodCultistAttackManager.attackTickReady)
+				{
+					int attack = BloodCultistAttackManager.assignedAttack[slot];
+
 					switch (attack)
 					{
 						case 0: SpawnSpirit(); break;
@@ -78,28 +95,16 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 						case 2: CoagShot(); break;
 					}
 				}
-
-				if (BloodCultistAttackManager.attackers[i] == NPC.whoAmI)
-				{
-					slot = i;
-					NPC.netUpdate = true;
-					break;
-				}
-				else
-				{
-					slot = -1;
-					NPC.netUpdate = true;
-				}
 			}
 
 			if (slot != -1)
 			{
 				float offsetX = slot == 0 ? -offset : offset;
-				targetPos = player.Center + new Vector2(offsetX, 0f);
+				targetPos = Morana.circlePos + new Vector2(offsetX, 0f);
 			}
 			else
 			{
-				targetPos = player.Center + new Vector2(0f, offset);
+				targetPos = Morana.circlePos + new Vector2(0f, offset);
 			}
 
 			//Main.NewText("local ready:" + BloodCultistAttackManager.attackTickReady);
@@ -109,18 +114,23 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			if (dir != Vector2.Zero) // only normalize if non-zero
 			{
 				dir.Normalize();
-
 				Vector2 velDir = (NPC.velocity != Vector2.Zero) ? Vector2.Normalize(NPC.velocity) : Vector2.Zero;
+
 				float alignment = Vector2.Dot(velDir, dir);
 
 				float velFactor = accelSpeed * Math.Max(alignment, 0.5f);
+
 				NPC.velocity += dir * velFactor;
 				NPC.velocity *= friction;
 			}
+
+			Dust.QuickDust(targetPos, Color.Yellow);
 		}
 
 		public void SpawnSpirit()
 		{
+			if (Main.netMode == NetmodeID.MultiplayerClient) return;
+
 			Player player = Main.player[NPC.target];
 			Vector2 dir = player.Center - NPC.Center;
 			dir.Normalize();
@@ -134,6 +144,8 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 		public void MalevolentProj()
 		{
+			if (Main.netMode == NetmodeID.MultiplayerClient) return;
+
 			Player player = Main.player[NPC.target];
 			int malevolentProjectile = ModContent.ProjectileType<ActuallyMalevolentProjectile>();
 			int damage = 30;
@@ -148,14 +160,17 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				float angle = startAngle + MathHelper.TwoPi * projAmount / 4;
 				Vector2 offset = angle.ToRotationVector2() * radius;
 				Vector2 spawnPos = player.Center + offset;
+				Vector2 dir = player.Center - spawnPos;
+				dir.Normalize();
 
-				Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, Vector2.Zero, malevolentProjectile, damage, knockBack, Owner: -1, NPC.target);
-				SpawnParticle(spawnPos);
+				Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, angle.ToRotationVector2() / 4, malevolentProjectile, damage, knockBack, Owner: -1, NPC.target);
 			}
 		}
 
 		public void CoagShot()
 		{
+			if (Main.netMode == NetmodeID.MultiplayerClient) return;
+
 			Player player = Main.player[NPC.target];
 			int coagShot = ModContent.ProjectileType<CoagultedHeart>();
 			int damage = 30;
@@ -168,11 +183,12 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 				dir.Normalize();
 			}
 
-			Vector2 spawnPos = NPC.Center + dir * 10f; //magic number is a little offset along dir
+			Vector2 spawnPos = NPC.Center + dir * 10f; //magic number is a little offset forwards
 
 			Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, dir * velocity, coagShot, damage, knockBack);
-			NPC.velocity += dir * -5f;
-			SpawnParticle(spawnPos);
+			NPC.velocity += dir * -10f;
+
+			NPC.netUpdate = true;
 		}
 
 		public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)

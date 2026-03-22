@@ -2,6 +2,7 @@ using Humanizer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -13,7 +14,7 @@ namespace CoH.Content.Projectiles.Melee
 	public class CirculationExplosion : ModProjectile
 	{
 		public int parentProjID = -1;
-		float toRotate = 0.2f;
+		float toRotate = 0.25f;
 		public override void SetDefaults()
 		{
 			Projectile.width = 128;
@@ -53,5 +54,10 @@ namespace CoH.Content.Projectiles.Melee
 				Projectile.Kill();
 			}
 		}
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overPlayers.Add(index);
+        }
 	}
 }

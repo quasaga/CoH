@@ -9,13 +9,13 @@ namespace CoH.Content.Projectiles.Enemies
 	{
 		public override void SetDefaults()
 		{
-			Projectile.width = 50; // The width of projectile hitbox
-			Projectile.height = 50; // The height of projectile hitbox
+			Projectile.width = 76; // The width of projectile hitbox
+			Projectile.height = 72; // The height of projectile hitbox
 			Projectile.aiStyle = 0; // The ai style of the projectile, please reference the source code of Terraria
 			Projectile.friendly = false; // Can the projectile deal damage to enemies?
 			Projectile.hostile = false; // Can the projectile deal damage to the player?
 			Projectile.penetrate = 25; // How many monsters the projectile can penetrate.
-			Projectile.timeLeft = 141; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+			Projectile.timeLeft = 150; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
 			Projectile.ignoreWater = false; // Does the projectile's speed be influenced by water?
 			Projectile.tileCollide = false; // Can the projectile collide with tiles?
 			Projectile.extraUpdates = 1; // Set to above 0 if you want the projectile to update multiple time in a frame
@@ -46,9 +46,7 @@ namespace CoH.Content.Projectiles.Enemies
 			Projectile.rotation = aimDir.ToRotation();
 
 			if (isLocked)
-			{
-				Projectile.velocity = Vector2.Zero;
-				
+			{	
 				lockTimeCounter++;
 				if (lockTimeCounter >= lockTime)
 				{

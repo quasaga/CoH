@@ -3,6 +3,7 @@ using FullSerializer;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,8 +15,10 @@ namespace CoH.Content.Projectiles.Bosses
 		int aimTime = 70;
 		int aimTimeCounter = 0;
 		int state = 0;
-		bool initiliazed = false;
 		Vector2 storedDirection;
+		NPC owner;
+		int extraTime = 0;
+		bool initialized = false;
 		public override void SetStaticDefaults()
 		{
 			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5; // The length of old position to be recorded
@@ -30,7 +33,7 @@ namespace CoH.Content.Projectiles.Bosses
 			Projectile.friendly = false; // Can the projectile deal damage to enemies?
 			Projectile.hostile = false; // Can the projectile deal damage to the player?
 			Projectile.penetrate = 100;
-			Projectile.timeLeft = 210;
+			Projectile.timeLeft = 600;
 			Projectile.light = 1f;
 			Projectile.ignoreWater = false; // Does the projectile's speed be influenced by water?
 			Projectile.tileCollide = false;
@@ -38,14 +41,14 @@ namespace CoH.Content.Projectiles.Bosses
 		}
 
 		public override void AI() {
-			int playerIndex = (int)Projectile.ai[0];
-			Player player = playerIndex >= 0 && playerIndex < Main.maxPlayers ? Main.player[playerIndex] : null;
-
-			int ownerID = (int)Projectile.ai[1];
-			int ownerIndex = (int)Projectile.ai[2];
-
 			if (state == 0)
 			{
+				int playerIndex = (int)Projectile.ai[0];
+				Player player = playerIndex >= 0 && playerIndex < Main.maxPlayers ? Main.player[playerIndex] : null;
+
+				int ownerIndex = (int)Projectile.ai[1];
+				owner = Main.npc[ownerIndex];
+
 				Vector2 aimDir = player.Center - Projectile.Center;
 				if (aimDir != Vector2.Zero)
 				{
@@ -68,17 +71,23 @@ namespace CoH.Content.Projectiles.Bosses
 					if (remainingTicks > 0)
 					{
 						Projectile.velocity -= Vector2.Normalize(Projectile.velocity) * (Projectile.velocity.Length() / remainingTicks);
-						Projectile.alpha -= Projectile.alpha / (int)remainingTicks * 2; // fade in a bit faster
+						Projectile.alpha -= Projectile.alpha / (int)remainingTicks;
 					}
 				}
 
-				if (ownerID == (float)ModContent.NPCType<Morana>())
+				if (owner.type == (float)ModContent.NPCType<Morana>())
 				{
-					NPC owner = Main.npc[ownerIndex];
-					Projectile.velocity = owner.velocity;
-					if (initiliazed) return;
-					initiliazed = true;
-					aimTime += 30;
+					int count = extraTime / 32;
+					Projectile.velocity.Y = owner.velocity.Y * (1 - count * 0.1f);
+					Projectile.velocity.X = owner.velocity.X * (1 - count * 0.06f);
+					Projectile.hostile = true;
+				}
+
+				if (!initialized)
+				{
+					extraTime = (int)Projectile.ai[2];
+					aimTime += extraTime;
+					initialized = true;
 				}
 			}
 			else if (state == 1)
@@ -87,7 +96,7 @@ namespace CoH.Content.Projectiles.Bosses
 				Projectile.hostile = true;
 
 				storedDirection.Normalize();
-				Projectile.velocity = storedDirection * projSpeed * -7;
+				Projectile.velocity = storedDirection * projSpeed * -4;
 				
 				state = 2;
 				Projectile.netUpdate = true;

@@ -10,8 +10,8 @@ namespace CoH.Content.Projectiles.Magic
 	{
 		public override void SetDefaults()
 		{
-			Projectile.width = 80; // The width of projectile hitbox
-			Projectile.height = 76; // The height of projectile hitbox
+			Projectile.width = 76; // The width of projectile hitbox
+			Projectile.height = 72; // The height of projectile hitbox
 			Projectile.aiStyle = 0; // The ai style of the projectile, please reference the source code of Terraria
 			Projectile.friendly = true; // Can the projectile deal damage to enemies?
 			Projectile.hostile = false; // Can the projectile deal damage to the player?

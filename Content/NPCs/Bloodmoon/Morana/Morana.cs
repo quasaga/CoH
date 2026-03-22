@@ -70,6 +70,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 		float arenaRadius = 560f;
 		int dmg = 0;
 		public static Asset<Texture2D> veinTexture;
+		public static Vector2 circlePos;
 
         public override void SetStaticDefaults()
         {
@@ -366,7 +367,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			targetPos = GetAveragePlayerPosition(radius: 1600) + new Vector2(0f, -450f);
 
-			Vector2 circlePos = NPC.Center + new Vector2(0, 450);
+			circlePos = NPC.Center + new Vector2(0, 450);
 			Vector2 dist = circlePos - player.Center;
 
 			arenaTimer++;
@@ -418,6 +419,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 					BloodCultistAttackManager.attackers[0] = cultists[0];
 					BloodCultistAttackManager.attackers[1] = cultists[1];
 					assignCultist = false;
+					NPC.netUpdate = true;
 				}
 
 				if (BloodCultistAttackManager.attackTickReady && cultists.Count >= 2)
@@ -450,43 +452,36 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			{
 				Filters.Scene.Deactivate("CoH:ArenaCircle");
 				effectsApplied = true;
+				arenaRadius *= 1.5f;
+				BloodCultistAttackManager.attackCooldownCounter = 0;
 			}
 			else if (Main.netMode != NetmodeID.Server)
 			{
 				Filters.Scene["CoH:DarknessCircle"].GetShader().UseTargetPosition(player.Center).
-					UseIntensity(720f).
+					UseIntensity(arenaRadius).
 					UseProgress(darkProgress);
 			}
 
 			accelSpeed = accelSpeed >= 0.8f ? accelSpeed = 0.8f : accelSpeed += 0.025f;
 			friction = 0.92f;
 			NPC.defense = 10;
-			NPC.damage = 0;
 			NPC.dontTakeDamage = false;
-
 			targetPos = player.Center;
 
 			teleportDelayCounter++;
 			if (teleportDelayCounter >= teleportDelay)
 			{
-				teleportDelay = Main.rand.Next(180, 360);
+				teleportDelay = Main.rand.Next(240, 480);
 				teleportDelayCounter = 0;
-				Teleport();
+				Teleport(player);
 			}
 
 			Vector2 dir = targetPos - NPC.Center;
-			if (dir.Length() <= NPC.width * 0.8f)
-			{
-				player.statLife -= dmg;
-				if (player.statLife <= 0)
-				{
-					player.KillMe(PlayerDeathReason.ByNPC(NPC.whoAmI), 1, 0, false);
-				}
-				
+			if (player.getRect().Intersects(NPC.getRect()))
+			{	
 				dir.Normalize();
 				accelSpeed = 0;
 				NPC.velocity = -dir * 10;
-				player.velocity += dir * 6 + new Vector2(0, -2);
 			}
 		}
 
@@ -528,7 +523,7 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 
 			float radius = 1000f;
 			int frostSpear = ModContent.ProjectileType<FrostSpear>();
-			int damage = dmg / 2;
+			int damage = NPC.damage / 2;
 			float knockBack = 5f;
 			float startAngle = spearOffsetNext ? MathHelper.PiOver4 : 0f;
 
@@ -595,29 +590,33 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			return sum / count; // average position
 		}
 
-		private void Teleport()
+		private void Teleport(Player player)
 		{
-			if (Main.netMode == NetmodeID.MultiplayerClient) return;
-
-			for (int i = 0; i < 16; i++)
+			if (Main.netMode != NetmodeID.Server)
 			{
-				Dust dust = Dust.NewDustDirect(NPC.Center, NPC.width, NPC.height, DustID.TheDestroyer);
-				dust.noGravity = true;
-				dust.scale = 1.5f;
-				dust.velocity *= 2f;
+				for (int i = 0; i < 16; i++)
+				{
+					Dust dust = Dust.NewDustDirect(NPC.Center, NPC.width, NPC.height, DustID.TheDestroyer);
+					dust.noGravity = true;
+					dust.scale = 1.5f;
+					dust.velocity *= 2f;
+				}
+			}
+			
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				int side = Main.rand.NextBool() ? 1 : -1;
+				int xOffset = 1000;
+				float pediction = player.velocity.Y * 10;
+				Vector2 targetPos = new Vector2(GetAveragePlayerPosition(1600f).X + xOffset * side, player.Center.Y + pediction);
+
+				NPC.Center = targetPos;
+
+				SpearWall();
 			}
 
-			Player player = Main.player[NPC.target];
-			int side = Main.rand.NextBool() ? 1 : -1;
-			int screenEdge = 768;
-			float pediction = player.velocity.Y * 10;
-			Vector2 targetPos = new Vector2(player.Center.X + screenEdge * side, player.Center.Y + pediction);
-
-			NPC.Center = targetPos;
-			NPC.netUpdate = true;
-
 			SoundEngine.PlaySound(SoundID.NPCDeath3, NPC.Center);
-			SpearWall();
+			NPC.netUpdate = true;
 		}
 
 		private void SpearWall()
@@ -625,18 +624,34 @@ namespace CoH.Content.NPCs.Bloodmoon.Morana
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 
 			int frostSpear = ModContent.ProjectileType<FrostSpear>();
-			int damage = dmg / 2;
+			int damage = NPC.damage / 2;
 			float knockBack = 5f;
-			int spearAmount = 4;
-			float radius = 64;
+			int spearAmount = 5;
+			float increment = 128;
+			int baseExtraTime = 32;
 
-			for (int i = 0; i < spearAmount; i++)
+			for (int yDir = -1; yDir <= 1; yDir += 2) // -1 (up), +1 (down)
 			{
-				float angle = MathHelper.TwoPi * i / spearAmount;
-				Vector2 offset = angle.ToRotationVector2() * radius;
-				Vector2 spawnPos = NPC.Center + offset;
+				for (int i = 0; i < spearAmount; i++)
+				{
+					int extraTime = baseExtraTime * i;
 
-				Projectile.NewProjectile(NPC.GetSource_FromAI(), spawnPos, Vector2.Zero, frostSpear, damage, knockBack, Owner: -1, (float)NPC.target, (float)ModContent.NPCType<Morana>(), NPC.whoAmI);
+					Vector2 offset = new Vector2(0, yDir * (increment + increment * i));
+					Vector2 spawnPos = NPC.Center + offset;
+
+					Projectile.NewProjectile(
+						NPC.GetSource_FromAI(),
+						spawnPos,
+						Vector2.Zero,
+						frostSpear,
+						damage,
+						knockBack,
+						Owner: -1,
+						NPC.target,
+						NPC.whoAmI,
+						extraTime
+					);
+				}
 			}
 		}
 	}

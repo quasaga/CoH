@@ -6,7 +6,7 @@ namespace CoH
 {
     public class CoHConfig : ModConfig
     {
-        public override ConfigScope Mode => ConfigScope.ClientSide;
+        public override ConfigScope Mode => ConfigScope.ServerSide;
 
         [DefaultValue(true)]
         public bool GenerateValhallaMicroBiome { get; set; }
