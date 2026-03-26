@@ -1,12 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CoH.Content.Projectiles.Enemies.Bloodmoon;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using CoH.Content.Projectiles;
-using CoH.Content.NPCs.Bloodmoon;
-using CoH.Content.Projectiles.Enemies;
 
 namespace CoH.Content.NPCs.Bloodmoon
 {

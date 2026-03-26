@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 using System;
 using Microsoft.Xna.Framework;
 using CoH.Content.Projectiles.Magic;
+using CoH.Content.Projectiles.Magic.Bloodmoon;
 
 namespace CoH.Common.Players
 {

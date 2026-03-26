@@ -1,4 +1,7 @@
-﻿using CoH.Content.Items.Weapons.Bloodmoon;
+﻿using CoH.Content.Items.Weapons.Magic.Bloodmoon;
+using CoH.Content.Items.Weapons.Melee.Bloodmoon;
+using CoH.Content.Items.Weapons.Ranged.Bloodmoon;
+using CoH.Content.Items.Weapons.Summon.Bloodmoon;
 using CoH.Content.NPCs.Bloodmoon.Morana;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;

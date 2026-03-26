@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using CoH.Content.Projectiles;
 using CoH.Common.Systems;
 using CoH.Content.Projectiles.Enemies;
+using CoH.Content.Projectiles.Enemies.Bloodmoon;
 
 namespace CoH.Content.NPCs.Bloodmoon.Morana
 {

@@ -10,16 +10,16 @@ using System.Linq;
 using Terraria.Graphics.Effects;
 using CoH.Content.Projectiles.Bosses;
 using Terraria.DataStructures;
-using MonoMod.Utils;
-using System.Security.AccessControl;
-using Terraria.UI;
-using Terraria.ModLoader.IO;
 using Terraria.GameContent.ItemDropRules;
-using CoH.Content.Items.Weapons.Bloodmoon;
 using CoH.Content.Items.Consumables;
 using ReLogic.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.Shaders;
+using CoH.Content.Items.Weapons.Melee.Bloodmoon;
+using CoH.Content.Items.Weapons.Summon.Bloodmoon;
+using CoH.Content.Items.Weapons.Ranged.Bloodmoon;
+using CoH.Content.Items.Weapons.Magic.Bloodmoon;
+using CoH.Content.Projectiles.Bosses.Morana;
 
 namespace CoH.Content.NPCs.Bloodmoon.Morana
 {
