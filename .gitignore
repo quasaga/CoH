@@ -1,0 +1,41 @@
+# Build output
+bin/
+obj/
+
+# tModLoader build artifacts
+*.tmod
+*.twld
+*.bak
+
+# Logs
+*.log
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+
+# Visual Studio / Rider / VSCode
+.vs/
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache / temp
+*.cache
+*.tmp
+
+# NuGet (optional)
+packages/
+*.nupkg
+
+# Debugging / profiling
+*.pidb
+*.mdb
+
+# Terraria / tModLoader local configs (if present)
+client.log
+server.log
