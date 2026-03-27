@@ -17,8 +17,5 @@ namespace CoH.Content.Tiles
 
 			AddMapEntry(new Color(200, 200, 200));
 		}
-		public override void ChangeWaterfallStyle(ref int style) {
-			style = ModContent.GetInstance<ValhallaWaterfallStyle>().Slot;
-		}
 	}
 }
